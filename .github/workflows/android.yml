@@ -45,7 +45,7 @@ jobs:
       # 5. 构建Android 14 Release版本APK
       - name: Build Release APK
         run: ./gradlew assembleDebug --stacktrace
-        env:
+        #env:
           # 
 
       # 6. 查找构建好的APK文件
@@ -71,8 +71,8 @@ jobs:
             ## Android应用手动发布
             - 发布版本：${{ github.event.inputs.release_version }}
             - 适配系统：Android 14 (API 34)
-            - 构建时间：${{ github.run_at }}
-            - 构建触发方式：手动触发
+           # - 构建时间：${{ github.run_at }}
+           # - 构建触发方式：手动触发
           draft: false
           prerelease: ${{ github.event.inputs.is_prerelease }}  # 手动选择是否为预发布
         env:
