@@ -44,11 +44,17 @@ jobs:
         run: chmod +x ./gradlew
 
       # 5. 构建Android 14 Release版本APK
-      - name: Build Release APK
+      - name: Build  APK
         run: ./gradlew assembleDebug --stacktrace
         #env:
           # 
 # 在 Locate Release APK 步骤前新增这个调试步骤
+      - name: upload artifact 
+        uses: actions/upload-artifact@v6
+        with:
+         name: apk
+         path: '**/*.apk'
+         
       - name: Debug - Show build directory structure
         run: |
          echo "=== 打印项目根目录文件 ==="
