@@ -48,11 +48,33 @@ jobs:
         run: ./gradlew assembleDebug --stacktrace
         #env:
           # 
-
+# 在 Locate Release APK 步骤前新增这个调试步骤
+      - name: Debug - Show build directory structure
+        run: |
+         echo "=== 打印项目根目录文件 ==="
+         ls -la
+         echo "=== 打印 build 目录结构 ==="
+         ls -la app/build/outputs/ || echo "app/build/outputs 目录不存在"
+         # 递归打印所有输出目录，找到所有apk文件
+          find . -name "*.apk" 2>/dev/null || echo "未找到任何APK文件"
       # 6. 查找构建好的APK文件
       - name: Locate Release APK
         id: find_apk
         run: |
+          ALL_APK=$(find . -name "*.apk" ! -name "*unaligned*" ! -name "*unsigned*" | sort)
+          echo "找到的所有APK文件："
+          echo "$ALL_APK"
+              APK_PATH=$(echo "$ALL_APK" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+          echo "❌ 未找到任何APK文件！请检查："
+          echo "  1. Gradle构建是否成功（查看上面的构建日志）"
+          echo "  2. 项目的APK输出路径是否自定义（非默认路径）"
+          exit 1
+          fi
+    
+          echo "✅ 选中APK文件：$APK_PATH"
+          echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "APK_NAME=$(basename $APK_PATH)" >> $GITHUB_OUTPUT
           APK_PATH=$(find app/build/outputs/apk/debug -name "*.apk" | head -n 1)
           if [ -z "$APK_PATH" ]; then
             echo "未找到构建的APK文件！"
