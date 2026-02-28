@@ -103,3 +103,13 @@ jobs:
           prerelease: ${{ github.event.inputs.is_prerelease }}  # 手动选择是否为预发布
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+          
+          
+          
+          
+      - name: upload artifact 
+        uses: actions/upload-artifact@v6
+        with:
+         name: apk
+         path: '**/*.apk'
